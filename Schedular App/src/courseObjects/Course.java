@@ -1,10 +1,9 @@
 package courseObjects;
 
-public class Course {
+public class Course implements Comparable<Course>{
 
 	// instance data fields:
 	private boolean waitListAvailable; // establishes if a wait list is available
-	private String courseName; // 2 or 4 alphabetic characters used to name the course (ie. MATH, CS, ENGL)
 	private int courseCode; // 4 digit number following the courseName
 	private int section; // the class section
 	private int crn; // 5 digit course number
@@ -26,16 +25,22 @@ public class Course {
 	private static int numberOfClasses; // total number of classes registered by the student
 	private static int totalHours; // total number of credit/hours registered by the student
 	private static String startDate; // 1st day for all classes
+	
+	//addedd by Brandon
+		private String subject; // 2 or 4 alphabetic characters used to name the course (ie. MATH, CS, ENGL)
 
+	//changed by Brandon
+		private String courseName; // name of the class (ie. CS2301)
+	
 	// default constructor:
 	public Course() {
 
 	}
 	
 	// testCourse.java constructor:
-		public Course(String courseName, int courseCode, int crn, double creditHours,
+		public Course(String subject, int courseCode, int crn, double creditHours,
 				String building, int room, String courseTime, String instructor) {
-			this.courseName = courseName;
+			this.subject = subject;
 			this.courseCode = courseCode;
 			this.crn = crn;
 			this.creditHours = creditHours;
@@ -47,12 +52,12 @@ public class Course {
 		}
 
 	// constructor with all data fields:
-	public Course(String courseName, int courseCode, int section, int crn,
+	public Course(String subject, int courseCode, int section, int crn,
 			int creditHours, int capacity, int waitListCapacity,
 			int waitListCount, String building, int room, String courseDays,
 			String courseTime, String fullTermEndDate, String partTermEndDate,
 			String instructor) {
-		this.courseName = courseName;
+		this.subject = subject;
 		this.courseCode = courseCode;
 		this.section = section;
 		this.crn = crn;
@@ -68,11 +73,51 @@ public class Course {
 		this.partTermEndDate = partTermEndDate;
 		this.instructor = instructor;
 	}
+	//added by Brandon
+	public int compareTo(Course input) {
+		int[][] time1 = getTime(courseTime);
+		int[][] time2 = getTime(input.getCourseTime());
+		if(time1[0][0] < time2[0][0] && time1[0][1] < time2[0][1] || time1[0][0] < time2[0][0] && time1[0][1] == time2[0][1]){
+			return -1;
+		}else if(time1[0][0] == time2[0][0] && time1[0][1] == time2[0][1]){
+			return 0;
+		}else{
+			return 1;
+		}
+	}
 
+	public boolean equals(Course input){
+		return subject.equals(input.getSubject());
+	}
+
+	public static int[][] getTime(String input){
+		int[][] time = new int[2][2];
+		time[0][0] = Integer.parseInt(input.substring(0, input.indexOf(":"))); 
+		time[0][1] = Integer.parseInt(input.substring(input.indexOf(":") + 1 , input.indexOf(":") + 3));
+		String b = input.substring(input.lastIndexOf("-") + 2);
+		time[1][0] = Integer.parseInt(b.substring(0, b.indexOf(":"))); 
+		time[1][1] = Integer.parseInt(b.substring(b.indexOf(":")+1,b.indexOf(":")+3 ));
+		return time;
+	}
+
+	public String toString() {
+		return "CRN: " + crn + " TIME " + courseTime + " DAY " + courseDays;
+	}
+	//end of add
 
 	// getter & setter methods
 	private boolean open; // establishes if the course is open or closed
 
+	//added by Brandon
+	public String getSubject() {
+		return subject;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+	//end of added code by Brandon
+	
 	public boolean isOpen() {
 		return open;
 	}
